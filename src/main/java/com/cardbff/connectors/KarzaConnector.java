@@ -1,6 +1,5 @@
-package com.cardbff.repository;
+package com.cardbff.connectors;
 
-import com.cardbff.dao.CustomerNetworkDao;
 import com.cardbff.interceptor.LogMethods;
 import com.cardbff.model.Customer;
 import com.cardbff.model.KarzaRequestData;
@@ -23,9 +22,9 @@ import java.util.logging.Logger;
 @Singleton
 @LogMethods
 @Primary
-public class KarzaRepository implements CustomerNetworkDao {
+public class KarzaConnector implements CustomerNetworkDao {
 
-    private static final Logger logger = Logger.getLogger(KarzaRepository.class.getName());
+    private static final Logger logger = Logger.getLogger(KarzaConnector.class.getName());
 
     @Inject
     @Client

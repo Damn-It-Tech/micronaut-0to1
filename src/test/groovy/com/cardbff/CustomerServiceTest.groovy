@@ -5,7 +5,7 @@ import com.cardbff.exceptions.HTTPClientException
 import com.cardbff.model.Customer
 import com.cardbff.model.KarzaResponseData
 import com.cardbff.repository.CustomerDBRepository
-import com.cardbff.repository.KarzaRepository
+import com.cardbff.connectors.KarzaConnector
 import com.cardbff.service.CustomerService
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -22,8 +22,8 @@ class CustomerServiceTest extends Specification {
     @MockBean(CustomerDBRepository)
     CustomerDBRepository customerDBRepository = Mock(CustomerDBRepository)
 
-    @MockBean(KarzaRepository)
-    KarzaRepository karzaRepository = Mock(KarzaRepository)
+    @MockBean(KarzaConnector)
+    KarzaConnector karzaRepository = Mock(KarzaConnector)
 
 
 

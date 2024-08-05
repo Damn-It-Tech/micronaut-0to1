@@ -1,8 +1,8 @@
 package com.cardbff.service;
 
 
-import com.cardbff.dao.CustomerDBDao;
-import com.cardbff.dao.CustomerNetworkDao;
+import com.cardbff.repository.CustomerDBDao;
+import com.cardbff.connectors.CustomerNetworkDao;
 import com.cardbff.exceptions.CustomerNotFoundException;
 import com.cardbff.exceptions.CustomerValidationException;
 import com.cardbff.exceptions.DatabaseOperationException;

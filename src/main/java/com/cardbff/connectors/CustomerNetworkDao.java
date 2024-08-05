@@ -1,4 +1,4 @@
-package com.cardbff.dao;
+package com.cardbff.connectors;
 
 import com.cardbff.model.Customer;
 import com.cardbff.model.KarzaResponseData;

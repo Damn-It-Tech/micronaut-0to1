@@ -1,6 +1,5 @@
 package com.cardbff.repository;
 
-import com.cardbff.dao.CustomerDBDao;
 import com.cardbff.exceptions.DatabaseOperationException;
 import com.cardbff.interceptor.LogMethods;
 import com.cardbff.model.Customer;
@@ -45,8 +44,7 @@ public class CustomerDBRepository implements CustomerDBDao {
                         logger.info("TABLE " + TABLE_NAME + " CREATED SUCCESSFULLY.");
                 }
                 catch(Exception e){
-                        logger.severe("Failed to create table " + TABLE_NAME + " with exception: " + e.getMessage());
-                }
+                        logger.severe("Failed to create table " + TABLE_NAME + " with exception: " + e.getMessage());}
         }
 
         @Override

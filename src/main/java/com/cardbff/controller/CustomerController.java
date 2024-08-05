@@ -9,9 +9,15 @@ import com.cardbff.service.CustomerService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpResponse;
 import io.micronaut.http.annotation.*;
+import io.micronaut.scheduling.TaskExecutors;
+import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.inject.Inject;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Controller("/customer")
@@ -21,6 +27,32 @@ public class CustomerController {
     @Inject
     CustomerService customerService;
 
+    /*
+    * Done using CompletableFuture, it is same as /create, only difference being different ways of
+    * doing reactive programming.
+    * */
+    @Post("/createNew")
+    @ExecuteOn(TaskExecutors.IO)
+    public CompletableFuture<MutableHttpResponse<String>> createCustomers(@Body Customer customer) {
+        ExecutorService executor = Executors.newCachedThreadPool();
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                customerService.createCustomer(customer);
+                return HttpResponse.ok(String.format("Customer %s added successfully", customer.getName()));
+            } catch (CustomerValidationException e) {
+                return HttpResponse.badRequest("Invalid customer data: " + e.getLocalizedMessage());
+            } catch (DatabaseOperationException e) {
+                return HttpResponse.serverError("Some database exception occurred: " + e.getCause().getLocalizedMessage());
+            } catch (Exception e) {
+                return HttpResponse.serverError("Some exception occurred: " + e.getLocalizedMessage());
+            }
+        }, executor);
+    }
+
+    /*
+    * Same as /createNew just done using Flowable instead of CompletableFuture.
+    * */
     @Post("/create")
     public Flowable<MutableHttpResponse<String>> createCustomer(@Body Customer customer) {
         return Flowable.fromCallable(() -> {

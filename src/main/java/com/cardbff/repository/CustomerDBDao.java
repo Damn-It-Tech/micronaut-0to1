@@ -1,4 +1,4 @@
-package com.cardbff.dao;
+package com.cardbff.repository;
 
 
 import com.cardbff.exceptions.DatabaseOperationException;
