@@ -48,8 +48,8 @@ class CustomerControllerTest extends Specification {
         where:
         description                       | exceptionToThrow                     | expectedStatus | expectedBody
         "successful creation"             | null                                 | HttpStatus.OK            | "Customer Mehul added successfully"
-        "validation exception"    | new CustomerValidationException("Invalid data", HttpStatus.BAD_REQUEST) | HttpStatus.BAD_REQUEST | "Invalid customer data: Invalid data"
-        "database operation exception"    | new DatabaseOperationException("error", new RuntimeException("DB error")) | HttpStatus.INTERNAL_SERVER_ERROR | "Some database exception occurred: DB error"
+        "validation exception"    | new CustomerValidationException("Invalid data") | HttpStatus.BAD_REQUEST | "Invalid customer data: Invalid data"
+        "database operation exception"    | new DatabaseOperationException("error") | HttpStatus.INTERNAL_SERVER_ERROR | "Some database exception occurred: DB error"
         "generic exception"               | new RuntimeException("Generic error") | HttpStatus.INTERNAL_SERVER_ERROR    | "Some exception occurred: Generic error"
     }
 

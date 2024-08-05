@@ -1,8 +1,5 @@
 package com.cardbff.controller;
 
-import com.cardbff.exceptions.CustomerNotFoundException;
-import com.cardbff.exceptions.CustomerValidationException;
-import com.cardbff.exceptions.DatabaseOperationException;
 import com.cardbff.interceptor.LogMethods;
 import com.cardbff.model.Customer;
 import com.cardbff.service.CustomerService;
@@ -35,18 +32,9 @@ public class CustomerController {
     @ExecuteOn(TaskExecutors.IO)
     public CompletableFuture<MutableHttpResponse<String>> createCustomers(@Body Customer customer) {
         ExecutorService executor = Executors.newCachedThreadPool();
-
         return CompletableFuture.supplyAsync(() -> {
-            try {
                 customerService.createCustomer(customer);
                 return HttpResponse.ok(String.format("Customer %s added successfully", customer.getName()));
-            } catch (CustomerValidationException e) {
-                return HttpResponse.badRequest("Invalid customer data: " + e.getLocalizedMessage());
-            } catch (DatabaseOperationException e) {
-                return HttpResponse.serverError("Some database exception occurred: " + e.getCause().getLocalizedMessage());
-            } catch (Exception e) {
-                return HttpResponse.serverError("Some exception occurred: " + e.getLocalizedMessage());
-            }
         }, executor);
     }
 
@@ -60,40 +48,16 @@ public class CustomerController {
                     return String.format("Customer %s added successfully", customer.getName());
                 })
                 .subscribeOn(Schedulers.io())
-                .map(HttpResponse::ok)
-                .onErrorResumeNext(throwable -> {
-                    if (throwable instanceof CustomerValidationException) {
-                        return Flowable.just(HttpResponse.badRequest("Invalid customer data: " + throwable.getLocalizedMessage()));
-                    } else if (throwable instanceof DatabaseOperationException) {
-                        return Flowable.just(HttpResponse.serverError("Some database exception occurred: " + throwable.getCause().getLocalizedMessage()));
-                    } else {
-                        return Flowable.just(HttpResponse.serverError("Some exception occurred: " + throwable.getLocalizedMessage()));
-                    }
-                });
+                .map(HttpResponse::ok);
     }
 
     @Get("/getCustomer/{mobile}")
     public Flowable<MutableHttpResponse<Customer>> findCustomerByMobile(@PathVariable String mobile){
 
         return Flowable.fromCallable(() ->
-                {
-                    Customer customer = customerService.getCustomerByMobile(mobile);
-                    if (customer == null) {
-                        throw new CustomerNotFoundException("Customer not found for mobile: " + mobile);
-                    }
-                    return customer;
-                })
+                        customerService.getCustomerByMobile(mobile))
                 .subscribeOn(Schedulers.computation())
-                .map(HttpResponse::ok)
-                .onErrorResumeNext(throwable -> {
-                    if(throwable instanceof CustomerNotFoundException) {
-                        return Flowable.just(HttpResponse.notFound().body(null));
-                    }
-                    else {
-                        return Flowable.just(HttpResponse.serverError(null));
-                    }
-                });
-
+                .map(HttpResponse::ok);
     }
 
     @Post("/verify")
@@ -104,15 +68,6 @@ public class CustomerController {
                     return "Pan Details Verified";
                 })
                 .subscribeOn(Schedulers.computation())
-                .map(HttpResponse::ok)
-                .onErrorResumeNext(throwable -> {
-                    if(throwable instanceof CustomerNotFoundException) {
-                        return Flowable.just(HttpResponse.notFound(throwable.getLocalizedMessage()).body(null));
-                    }
-                    else {
-                        return Flowable.just(HttpResponse.serverError(throwable.getLocalizedMessage()));
-                    }
-                });
+                .map(HttpResponse::ok);
     }
-
 }

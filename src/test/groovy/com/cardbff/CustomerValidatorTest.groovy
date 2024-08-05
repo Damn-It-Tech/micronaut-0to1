@@ -42,7 +42,6 @@ class CustomerValidatorTest extends Specification {
         then:
         def exception = thrown(CustomerValidationException)
         exception.message == "Name cannot be null"
-        exception.status == HttpStatus.BAD_REQUEST
     }
 
     @Unroll
@@ -62,7 +61,6 @@ class CustomerValidatorTest extends Specification {
         then:
         def exception = thrown(CustomerValidationException)
         exception.message == "Invalid DOB"
-        exception.status == HttpStatus.BAD_REQUEST
 
         where:
         invalidDob << ["32/01/1990", "01/13/1990", "01/01/90", "01-01-1990"]
@@ -85,7 +83,6 @@ class CustomerValidatorTest extends Specification {
         then:
         def exception = thrown(CustomerValidationException)
         exception.message == "Invalid PAN format"
-        exception.status == HttpStatus.BAD_REQUEST
 
         where:
         invalidPan << ["ABCDE12345", "abcde1234f", "ABC1234G", "ABCD1234EF"]
@@ -108,7 +105,6 @@ class CustomerValidatorTest extends Specification {
         then:
         def exception = thrown(CustomerValidationException)
         exception.message == "Invalid mobile number format"
-        exception.status == HttpStatus.BAD_REQUEST
 
         where:
         invalidMobile << ["98765432100", "5876543210", "987654321", "abcdefghij"]
@@ -131,7 +127,6 @@ class CustomerValidatorTest extends Specification {
         then:
         def exception = thrown(CustomerValidationException)
         exception.message == "Invalid email format"
-        exception.status == HttpStatus.BAD_REQUEST
 
         where:
         invalidEmail << ["john.doe@", "@example.com", "john.doe@example", "john.doe@example"]

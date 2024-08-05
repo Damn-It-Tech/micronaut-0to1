@@ -1,8 +1,11 @@
 package com.cardbff.exceptions;
 
 public class CustomerNotFoundException extends RuntimeException {
-    public CustomerNotFoundException(String s) {
-        super(s);
+
+//    private static final long serialVersionUID = 1L;
+
+    public CustomerNotFoundException(String message) {
+        super(message);
     }
 }
 

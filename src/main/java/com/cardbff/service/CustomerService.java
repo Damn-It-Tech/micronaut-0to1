@@ -15,13 +15,9 @@ import io.micronaut.http.HttpResponse;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.logging.Logger;
-
 @Singleton
 @LogMethods
 public class CustomerService {
-
-    private static final Logger logger = Logger.getLogger(CustomerService.class.getName());
 
     @Inject
     CustomerDBDao customerRepository;
@@ -51,7 +47,7 @@ public class CustomerService {
 
     private void verifyPanStatusFromKarza(Customer customer) throws HTTPClientException {
 
-        HttpResponse<KarzaResponseData> response = karzaRepository.getPanStatusFromKarza(customer);
+        HttpResponse<KarzaResponseData> response = karzaRepository.getPanStatusFromKarzaUsingMaybe(customer).blockingGet();
 
         if(response != null && response.getBody().isPresent()) {
            String statusCode = response.getBody().get().getStatusCode();
@@ -70,15 +66,9 @@ public class CustomerService {
         }
     }
 
-    public Customer getCustomerByMobile(String mobile) throws DatabaseOperationException {
-        logger.info("inside service get customer by mobile ");
-
-        try {
-            return customerRepository.getCustomerByMobile(mobile).orElse(null);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
+    public Customer getCustomerByMobile(String mobile) throws DatabaseOperationException, CustomerNotFoundException {
+            Customer customer = customerRepository.getCustomerByMobile(mobile).orElse(null);
+            if(customer == null) throw new CustomerNotFoundException("Customer with mobile: " + mobile + " cannot be found.");
+            return customer;
     }
 }

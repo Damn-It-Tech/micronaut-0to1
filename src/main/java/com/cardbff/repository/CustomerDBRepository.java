@@ -44,7 +44,10 @@ public class CustomerDBRepository implements CustomerDBDao {
                         logger.info("TABLE " + TABLE_NAME + " CREATED SUCCESSFULLY.");
                 }
                 catch(Exception e){
-                        logger.severe("Failed to create table " + TABLE_NAME + " with exception: " + e.getMessage());}
+                        logger.severe("Failed to create table " + TABLE_NAME + " with exception: " + e.getMessage());
+                        throw new DatabaseOperationException(e.getMessage());
+                }
+
         }
 
         @Override
@@ -66,7 +69,7 @@ public class CustomerDBRepository implements CustomerDBDao {
                 }
                 catch(Exception e){
                         logger.severe("Some error occurred while inserting into table: " + e.getMessage());
-                        throw new DatabaseOperationException(e.getMessage(), e.getCause());
+                        throw new DatabaseOperationException(e.getMessage());
                 }
         }
 
@@ -82,7 +85,7 @@ public class CustomerDBRepository implements CustomerDBDao {
                 }
                 catch(Exception e){
                         logger.severe("Exception occurred while updating pan verification status");
-                        throw new DatabaseOperationException(e.getMessage(), e.getCause());
+                        throw new DatabaseOperationException(e.getMessage());
                 }
         }
         @Override
@@ -107,7 +110,7 @@ public class CustomerDBRepository implements CustomerDBDao {
                 }
                 catch(Exception e){
                         logger.severe("Exception occurred while getting customer by mobile number");
-                        throw new DatabaseOperationException(e.getMessage(), e.getCause());
+                        throw new DatabaseOperationException(e.getMessage());
                 }
 
         }
@@ -133,34 +136,9 @@ public class CustomerDBRepository implements CustomerDBDao {
                         return result;
                 }
                 catch(Exception e){
-                        e.printStackTrace();
-                        throw new DatabaseOperationException(e.getMessage(), e.getCause());
+                        logger.severe("Exception occurred while getting customer by PAN");
+                        throw new DatabaseOperationException(e.getMessage());
 
                 }
         }
-
-        //        private void checkIfTableExists() {
-//                logger.info("checkIfTableExists inside CustomerRepository");
-//
-//
-//                Jdbi jdbi=Jdbi.create(dataSource);
-//                try(Handle handle=jdbi.open()) {
-//
-//                        Optional<Boolean> tableExists = handle.createQuery("SELECT EXISTS (SELECT 1 FROM pg_tables WHERE tablename = :tableName) AS table_existence")
-//                                .bind("tableName", TABLE_NAME)
-//                                .mapTo(Boolean.class)
-//                                .findFirst();
-//
-//                        handle.close();
-//
-//                        if (tableExists.orElse(false) ) {
-//                                logger.info("TABLE " + TABLE_NAME + " EXISTS");
-//                        } else {
-//                                logger.info("TABLE " + TABLE_NAME + " DOES NOT EXIST");
-//                        }
-//                }
-//                catch(Exception e){
-//                        logger.severe("Exception occurred in checkIfTableExists");
-//                }
-//        }
 }

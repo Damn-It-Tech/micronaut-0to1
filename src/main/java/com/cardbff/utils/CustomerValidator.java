@@ -26,14 +26,14 @@ public class CustomerValidator {
 
     private static void validateField(Supplier<?> fieldSupplier, String errorMessage) throws CustomerValidationException {
         if (Objects.isNull(fieldSupplier.get())) {
-            throw new CustomerValidationException(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new CustomerValidationException(errorMessage);
         }
     }
 
     private static <T> void validateField(Supplier<T> fieldSupplier, Predicate<T> validationPredicate, String errorMessage) throws CustomerValidationException {
         T value = fieldSupplier.get();
         if (Objects.isNull(value) || !validationPredicate.test(value)) {
-            throw new CustomerValidationException(errorMessage, HttpStatus.BAD_REQUEST);
+            throw new CustomerValidationException(errorMessage);
         }
     }
 }

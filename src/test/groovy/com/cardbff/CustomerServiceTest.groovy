@@ -113,16 +113,4 @@ class CustomerServiceTest extends Specification {
         1 * customerDBRepository.getCustomerByMobile(mobile) >> Optional.of(customer)
         result == customer
     }
-
-    def "should handle exception in getCustomerByMobile"() {
-        given:
-        String mobile = "9876543210"
-
-        when:
-        Customer result = customerService.getCustomerByMobile(mobile)
-
-        then:
-        1 * customerDBRepository.getCustomerByMobile(mobile) >> { throw new RuntimeException("Database error") }
-        result == null
-    }
 }

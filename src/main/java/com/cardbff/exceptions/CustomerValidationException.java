@@ -5,11 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class CustomerValidationException extends RuntimeException {
-    private final HttpStatus status;
-
-    public CustomerValidationException(String message, HttpStatus status) {
+    public CustomerValidationException(String message) {
         super(message);
-        this.status = status;
     }
 
 }
