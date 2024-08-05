@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: com.cardbff
+testFramework: spock
+sourceLanguage: java
+buildTool: gradle
+features: [app-name, gradle, h2, http-client, java, java-application, jdbc-hikari, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, properties, readme, rxjava3, rxjava3-http-client, serialization-jackson, shade, spock, sql-jdbi, static-resources]
